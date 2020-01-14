@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Books and Reviews
+{% endblock %}
+
+{% block body %}
+    <h1>Create Account</h1>
+
+    <form action = "{{ url_for('sign_up') }}" method="POST">
+        <div class="form-group">
+            User Name:<br>
+            <input type="text" name="username" value="yourusername">
+            <br>
+        </div>
+        <div class="form-group">
+            password:<br>
+            <input type="password" name="passkey">
+            <br><br>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+
+{% endblock %}
