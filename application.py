@@ -56,6 +56,7 @@ def authenticate():
         
     session['user'] = username
     return render_template("search.html", user = session['user'])
+    #return redirect(url_for('search'))
 
 
 
@@ -79,6 +80,20 @@ def search():
     return render_template("search.html", books=books, user = session['user'])
 
 
+@app.route("/bookinfo/<string:isbn>", methods=["GET"])
+def get_book_info_page(isbn):
+    
+    res = requests.get("http://127.0.0.1:5000/api/bookinfo/" + isbn)
+    title = res.json()["title"]
+    author = res.json()["author"]
+    year = res.json()["year"]
+    isbn = res.json()["isbn"]
+    review_count = res.json()["review_count"]
+    average_score = res.json()["average_score"]
+    #print(title + '|' + author + '|' + year + '|' + isbn + '|' + review_count + '|' + average_score) """
+    return render_template("bookinfo.html", title=title, author=author, year=year, isbn=isbn, review_count=review_count, average_score=average_score)
+
+
 
 @app.route("/api/bookinfo/<string:isbn>", methods=["GET"])
 def get_book_info(isbn):
@@ -95,7 +110,7 @@ def get_book_info(isbn):
     
     with app.app_context():
         resp =  jsonify({
-                "title": book.isbn,
+                "title": book.title,
                 "author": book.author,
                 "year": book.year,
                 "isbn": book.isbn,
@@ -110,9 +125,9 @@ def test():
 
 
 def main():
-    #print(get_book_info('5559609129')) #valid book isbn
+    print(get_book_info('5559609129')) #valid book isbn
     #print(get_book_info('12')) #invalid book isbn
-    print(test())
+    #print(test())
 
 
 if __name__ == "__main__":

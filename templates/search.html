@@ -10,18 +10,35 @@
     <form action = "{{ url_for('search') }}" method="POST">
         <div class="form-group">
             Book Name:<br>
-            <input type="text" name="bookstring" value="bookname">
+            <input type="text" name="bookstring" value="">
             <br>
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
 
     <h2> Book Results</h2>
-    <ul>
+
+    <table class="table">
+        <thead class="thead-dark"></thead>
+        <tr>
+            <th>ISBN Link</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+        </tr>
         {% for book in books %}
-            <li>{{ book.title }}</li>
+            <tr>
+                <td><a href="/bookinfo/{{ book.isbn }}">{{ book.isbn }}</a></td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.year }}</td>
+            </tr>
         {% else %}
             <li>No book.</li>
         {% endfor %}
-    </ul>
+    </table>
+
+
 {% endblock %}
