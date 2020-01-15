@@ -27,15 +27,17 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/index.html")
 def index():
     if 'user' in session:
-        #return render_template("search.html")
-        return "Hello User"
+        return render_template("search.html")
     return render_template("index.html")
-    #return "Project 1: TODO Hello World"
+
 
 
 @app.route("/authenticate", methods=["POST"])
 def authenticate():
     """Handles the sign in, sign up part"""
+    if 'user' in session:
+        render_template("search.html")
+
     username = request.form.get("username")
     password = request.form.get("passkey")
         
@@ -45,17 +47,17 @@ def authenticate():
                                         {"username": username, "password": password}).fetchone()
         # Checking is the user doesn't exists
         if authuser is None:
-            return """<h1> User Not Found </h1> <br> <a href="/">Click here to sign in again!</a>"""
-        
-        session['user'] = request.form.get("username")
-        return "Welcome" + session['user']
+            return """<h1> User Not Found </h1> <br> <a href="/">Click here to sign in again!</a>"""        
     else:
         # SIGN UP LOGIC: Save the username and password in a database   
         db.execute("INSERT INTO auth (uname, password) VALUES (:username, :password)",
                 {"username": username, "password": password}) 
         db.commit()
-        return "Account created"       
-        #return render_template("index.html")
+        
+    session['user'] = username
+    return render_template("search.html", user = session['user'])
+
+
 
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
@@ -63,6 +65,18 @@ def logout():
         session.pop('user', None) # delete user info from session
         return render_template("index.html")
 
+
+
+@app.route("/search", methods=["POST", "GET"])
+def search():
+    bookstr = request.form.get("bookstring")
+    
+    # Get all the books that match bookstring
+    # search_string = "SELECT * FROM books WHERE isbn LIKE " + "'\%" + bookstr + "\%'" + " OR WHERE title LIKE " + "'\%" + bookstr + "\%'" + " OR WHERE author LIKE " + "'\%" + bookstr + "\%'"
+    search_string = "SELECT * FROM books WHERE author = '" + bookstr +"'"
+    books = db.execute(search_string).fetchall()
+    
+    return render_template("search.html", books=books, user = session['user'])
 
 
 
