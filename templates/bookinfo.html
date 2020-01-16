@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Books and Reviews
+{% endblock %}
+
+{% block body %}
+    <h1>Book information for {{bookinfo[0]}} </h1>
+
+    ISBN: {{bookinfo[3]}} <br>
+    Title: {{bookinfo[0]}} <br>
+    Author: {{bookinfo[1]}} <br>
+    Year: {{bookinfo[2]}} <br>
+    Reviews: {{bookinfo[4]}} <br>
+    Average Score: {{bookinfo[5]}} <br><br><br>
+    
+
+    <h3>Add Review:</h3> 
+    <form action = "{{ url_for('add_review', isbn=bookinfo[3]) }}" method="POST">
+        <div class="form-group">
+            <textarea rows="4" cols="50" name="review">
+                Enter text here...</textarea>
+            <br>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Review</button>
+    </form>
+    <br>
+    <br>
+
+    <h3>User Reviews</h3>
+    <ul>
+        {% for review in bookinfo[6] %}
+            <li>{{ review.uname }} says: "{{ review.review }}"</li>
+        {% else %}
+            <li>No reviews.</li>
+        {% endfor %}
+    </ul>
+
+
+
+
+{% endblock %}

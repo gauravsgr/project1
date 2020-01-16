@@ -6,22 +6,22 @@
 
 {% block body %}
     <h1>Welcome {{user}} </h1>
-
+    <div class="form-group">
     <form action = "{{ url_for('search') }}" method="POST">
-        <div class="form-group">
-            Book Name:<br>
+            Book Title Or Author's Name or ISBN or Year:<br>
             <input type="text" name="bookstring" value="">
             <br>
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
-      </form>
+    </form>
+</div>
+    <br>
+    <br>
 
     <h2> Book Results</h2>
-
     <table class="table">
         <thead class="thead-dark"></thead>
         <tr>
-            <th>ISBN Link</th>
             <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
@@ -30,13 +30,12 @@
         {% for book in books %}
             <tr>
                 <td><a href="/bookinfo/{{ book.isbn }}">{{ book.isbn }}</a></td>
-                <td>{{ book.isbn }}</td>
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.year }}</td>
             </tr>
         {% else %}
-            <li>No book.</li>
+            No Result found.
         {% endfor %}
     </table>
 
